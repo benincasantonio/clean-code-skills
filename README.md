@@ -35,15 +35,45 @@ These skills encode battle-tested solutions to exactly these problems—directly
 | TypeScript | `clean-general` | Core principles (DRY, single responsibility) | G5, G16, G23, G25, G30, G36 |
 | TypeScript | `clean-names` | Descriptive, unambiguous naming | N1-N7 |
 | TypeScript | `clean-tests` | Fast, thorough, boundary-aware tests | T1-T9 |
+| Rust | `boy-scout` | **Orchestrator**—small, relevant improvements that preserve contracts | Coordinates Rust skills |
+| Rust | `rust-clean-code` | **Master skill**—Clean Code contextualized for Rust | C1-C5, E1-E2, F1-F4, G1-G36, N1-N7, T1-T9 |
+| Rust | `clean-comments` | Useful rationale, rustdoc, and accurate contracts | C1-C5 |
+| Rust | `clean-functions` | Cohesive functions and explicit data flow | F1-F4 |
+| Rust | `clean-general` | Clear intent, shared domain knowledge, controlled coupling | G5, G16, G23, G25, G30, G36 |
+| Rust | `clean-names` | Domain meaning and names that reveal effects | N1-N7 |
+| Rust | `clean-tests` | Readable, independent behavioral tests | T1-T9 |
 
 Use the master skill for comprehensive coverage, or individual skills for targeted enforcement.
+
+### Rust: Clean Code in context
+
+The Rust track takes its organizing principles from Robert C. Martin's
+*Clean Code*, first edition, especially Chapter 17. Its 63 C/E/F/G/N/T rules
+address readability, maintainability, and disciplined refactoring. It keeps
+the familiar identifiers while explaining how their intent applies to Rust.
+The book's Java-specific rules are not replaced with a general Rust catalog.
+
+For example, intentional `&mut` parameters can make mutation clear,
+exhaustive `match` can express a closed domain, and readable iterator chains
+do not violate encapsulation merely by containing several dots. Rust
+documentation informs these adaptations; the goal remains Clean Code.
+
+This track complements general language guidance such as
+[leonardomso/rust-skills](https://github.com/leonardomso/rust-skills) and works
+independently of it. That separately named skill can coexist with this track.
+There are no crate recommendations, optimization recipes, or runtime-specific
+rules here.
+
+Examples use edition 2024 and are compatible with Rust 1.90.0. When applying
+the skills, respect the target project's edition, minimum supported Rust
+version, and established public contracts.
 
 ### Choose Your Language
 
 Pick one track and copy only that track's skills:
 
 > [!WARNING]
-> Install only one language track per skills directory. Python and TypeScript tracks reuse the same skill names (`boy-scout`, `clean-functions`, etc.). Installing both together can make the agent load conflicting instructions and behave inconsistently.
+> Install only one language track from this repository per skills directory. Python, TypeScript, and Rust reuse the same skill names (`boy-scout`, `clean-functions`, etc.). Installing multiple tracks together can make the agent load conflicting instructions and behave inconsistently.
 
 ```bash
 # Python track
@@ -51,6 +81,9 @@ cp -r skills/python/* <YOUR_SKILLS_DIR>/
 
 # TypeScript track
 cp -r skills/typescript/* <YOUR_SKILLS_DIR>/
+
+# Rust track
+cp -r skills/rust/* <YOUR_SKILLS_DIR>/
 ```
 
 ### The Boy Scout Rule
@@ -79,6 +112,9 @@ cp -r skills/python/* .agent/skills/
 
 # TypeScript track
 cp -r skills/typescript/* .agent/skills/
+
+# Rust track
+cp -r skills/rust/* .agent/skills/
 ```
 
 **Global** (applies to all projects):
@@ -90,6 +126,9 @@ cp -r skills/python/* ~/.gemini/antigravity/skills/
 
 # TypeScript track
 cp -r skills/typescript/* ~/.gemini/antigravity/skills/
+
+# Rust track
+cp -r skills/rust/* ~/.gemini/antigravity/skills/
 ```
 
 **Quick install** (global, one command) — pick one track:
@@ -110,6 +149,9 @@ cp -r /tmp/clean-code-skills/skills/typescript/* ~/.gemini/antigravity/skills/ &
 rm -rf /tmp/clean-code-skills
 ```
 
+For Rust, use the project-specific or global copy command above from a
+checkout containing `skills/rust/`.
+
 ### Anthropic Claude Code
 
 **Project-specific**:
@@ -122,6 +164,9 @@ cp -r skills/python/* .claude/skills/
 
 # TypeScript track
 cp -r skills/typescript/* .claude/skills/
+
+# Rust track
+cp -r skills/rust/* .claude/skills/
 ```
 
 **Global**:
@@ -133,6 +178,9 @@ cp -r skills/python/* ~/.claude/skills/
 
 # TypeScript track
 cp -r skills/typescript/* ~/.claude/skills/
+
+# Rust track
+cp -r skills/rust/* ~/.claude/skills/
 ```
 
 **Quick install** (global, one command) — pick one track:
@@ -153,24 +201,29 @@ cp -r /tmp/clean-code-skills/skills/typescript/* ~/.claude/skills/ && \
 rm -rf /tmp/clean-code-skills
 ```
 
+For Rust, use the project-specific or global copy command above from a
+checkout containing `skills/rust/`.
+
 **Verify**
 
 In a running Claude Code session, confirm the skills loaded:
 
-- Ask `What skills are available?` — you should see `boy-scout`, `clean-comments`, `clean-functions`, `clean-general`, `clean-names`, `clean-tests`, and `python-clean-code` in the list.
+- Ask `What skills are available?` — you should see `boy-scout`, `clean-comments`, `clean-functions`, `clean-general`, `clean-names`, `clean-tests`, and the master for your chosen track: `python-clean-code`, `typescript-clean-code`, or `rust-clean-code`.
 - Or direct-invoke one: `/boy-scout` should load the Boy Scout skill explicitly.
 
 Skills hot-reload inside an existing `~/.claude/skills/` directory — no restart needed. If you created the directory for the first time during this session, restart Claude Code once so it starts watching it.
 
 **Update**
 
-Re-run the Quick install command to pull the latest version. It overwrites the seven skill directories and leaves any other skills untouched.
+Re-run the Quick install command, or update your checkout and repeat the copy
+command for your chosen track. It overwrites the seven skill directories and
+leaves any other skills untouched.
 
 If you expect to update often, symlink instead of copy:
 
 ```bash
 git clone https://github.com/ertugrul-dmr/clean-code-skills.git ~/src/clean-code-skills
-# Pick one track — swap `python` for `typescript` to use the TS track.
+# Pick one track — swap `python` for `typescript` or `rust`.
 cd ~/src/clean-code-skills/skills/python
 for d in */; do ln -sfn "$PWD/${d%/}" "$HOME/.claude/skills/${d%/}"; done
 ```
@@ -179,13 +232,26 @@ Then `git pull` in `~/src/clean-code-skills` refreshes every skill.
 
 **Uninstall**
 
+Remove the six shared skills and the master for the track you installed.
+For Python:
+
 ```bash
 rm -rf ~/.claude/skills/{boy-scout,clean-comments,clean-functions,clean-general,clean-names,clean-tests,python-clean-code}
 ```
 
+For TypeScript, replace `python-clean-code` with `typescript-clean-code`.
+For Rust:
+
+```bash
+rm -rf ~/.claude/skills/{boy-scout,clean-comments,clean-functions,clean-general,clean-names,clean-tests,rust-clean-code}
+```
+
+Use the corresponding destination if you installed elsewhere. When switching
+tracks, remove the previous track first so its master does not remain active.
+
 ### Other Agent Skills-Compatible Tools
 
-The skills follow the [Agent Skills](https://agentskills.io) open standard. Check your tool's documentation for the skills directory location, then copy the `skills/` folder contents there.
+The skills follow the [Agent Skills](https://agentskills.io) open standard. Check your tool's documentation for the skills directory location, then copy only your chosen track's contents there (for example, `skills/rust/*`).
 
 ---
 
@@ -279,9 +345,70 @@ function processTransactionsWithoutTax(transactions: Transaction[]): number[] {
 }
 ```
 
+### Rust example: reveal a domain operation
+
+**Before:** vague names and string codes obscure a simple, closed choice.
+
+```rust
+fn msg(t: &str) -> Option<&'static str> {
+    match t {
+        "P" => Some("Collect at the reception desk"),
+        "D" => Some("Wait for the courier"),
+        _ => None,
+    }
+}
+
+assert_eq!(msg("P"), Some("Collect at the reception desk"));
+assert_eq!(msg("unknown"), None);
+```
+
+**After:** parse the external code at the boundary, then use meaningful names
+and an exhaustive match within the domain (N1, G23, G27).
+
+```rust
+enum DeliveryMethod {
+    Collection,
+    Courier,
+}
+
+impl DeliveryMethod {
+    fn from_code(code: &str) -> Option<Self> {
+        match code {
+            "P" => Some(Self::Collection),
+            "D" => Some(Self::Courier),
+            _ => None,
+        }
+    }
+
+    fn instructions(&self) -> &'static str {
+        match self {
+            Self::Collection => "Collect at the reception desk",
+            Self::Courier => "Wait for the courier",
+        }
+    }
+}
+
+// Retain the existing boundary contract for callers.
+fn msg(code: &str) -> Option<&'static str> {
+    DeliveryMethod::from_code(code).map(|method| method.instructions())
+}
+
+assert_eq!(msg("P"), Some("Collect at the reception desk"));
+assert_eq!(msg("D"), Some("Wait for the courier"));
+assert_eq!(msg("unknown"), None);
+```
+
+This is useful when delivery methods are a shared domain concept. A tiny,
+isolated lookup may only need better names; do not introduce types solely to
+make code appear more structured.
+
 ---
 
 ## Rule Reference
+
+The tables below retain the existing Python/TypeScript summaries. Rust keeps
+the corresponding identifiers but applies the contextualized wording in
+[the Rust master skill](skills/rust/rust-clean-code/SKILL.md).
 
 ### Comments (C1-C5)
 | Rule | Principle |
@@ -378,13 +505,30 @@ function processTransactionsWithoutTax(transactions: Transaction[]): number[] {
 | T8 | Check coverage when debugging |
 | T9 | Tests must be fast (<100ms) |
 
+### Rust interpretations of the shared rules
+
+| Rules | Clean Code intent in Rust |
+|-------|---------------------------|
+| C1-C5 | Remove noise; retain useful rustdoc, technical rationale, legal notices, and safety explanations |
+| E1-E2 | Use reproducible project build/test commands, usually `cargo build` and `cargo test` |
+| F1 | Reduce conceptual complexity; parameter count is a signal, not a hard limit |
+| F2 | Make data flow explicit; intentional `&mut` and writer arguments are valid |
+| F3, G15 | Make the chosen operation clear; boolean domain data and meaningful mode enums are valid |
+| F4, G9 | Check feature gates and downstream public users before deleting code |
+| G7, G18 | Use cohesive traits and methods where appropriate; avoid invented object hierarchies |
+| G23 | Use exhaustive `match` for closed alternatives and traits for substitutable behavior |
+| G26, G30, G34 | Express failure contracts with `Result`/`Option`; keep normal flow clear with `?` |
+| G36 | Judge coupling to internal details, not dots in an iterator or builder chain |
+| N1-N7 | Reveal domain meaning and effects while following useful Rust naming conventions |
+| T1-T9 | Test behavior, boundaries, and regressions; allow related assertions and realistic suite timings |
+
 ---
 
 ## Customization
 
 ### Using Individual Skills
 
-Don't need all 66 rules? Copy only the skills you want:
+Don't need a full track? Copy only the skills you want:
 
 ```bash
 # Just function rules
@@ -392,13 +536,16 @@ cp -r skills/python/clean-functions ~/.gemini/antigravity/skills/
 
 # Just comment rules  
 cp -r skills/typescript/clean-comments ~/.claude/skills/
+
+# Rust function rules (as an alternative language track)
+cp -r skills/rust/clean-functions ~/.claude/skills/
 ```
 
 ### Extending Skills
 
 Add your own rules by editing the `SKILL.md` files or creating new skill folders:
 
-```
+```text
 skills/
 ├── python/
 │   ├── python-clean-code/
@@ -407,6 +554,11 @@ skills/
 │       └── SKILL.md
 ├── typescript/
 │   ├── typescript-clean-code/
+│   │   └── SKILL.md
+│   └── clean-comments/
+│       └── SKILL.md
+├── rust/
+│   ├── rust-clean-code/
 │   │   └── SKILL.md
 │   └── clean-comments/
 │       └── SKILL.md
@@ -419,7 +571,7 @@ skills/
 This repository does not ship a `scripts/` folder or lint scripts by default.
 If you want stricter enforcement, create your own scripts inside the skill folder.
 
-```
+```text
 skills/python/python-clean-code/
 ├── SKILL.md
 └── scripts/
@@ -444,8 +596,8 @@ This keeps the agent fast—it's not thinking about database migrations when you
 
 PRs welcome! Some ideas:
 
-- [ ] Keep Python/TypeScript parity as rules evolve
-- [ ] Additional language support (Go, Rust)
+- [ ] Keep Python/TypeScript/Rust principles aligned while respecting language-specific interpretations
+- [ ] Additional language support (Go)
 - [ ] Integration tests
 - [ ] Pre-commit hooks
 - [ ] IDE extensions
@@ -455,6 +607,9 @@ PRs welcome! Some ideas:
 ## Resources
 
 - [*Clean Code*](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882) by Robert C. Martin
+- [*Clean Code*, first edition: publisher page](https://www.informit.com/store/clean-code-a-handbook-of-agile-software-craftsmanship-9780132350884)
+- [The Rust Book](https://doc.rust-lang.org/book/) and [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/) — technical references for contextualizing the principles
+- [Rust Skills](https://github.com/leonardomso/rust-skills) — complementary general Rust guidance, not a dependency
 - [Agent Skills Standard](https://agentskills.io)
 - [Antigravity Documentation](https://developers.google.com/antigravity)
 - [Claude Code Documentation](https://docs.anthropic.com/claude-code)
